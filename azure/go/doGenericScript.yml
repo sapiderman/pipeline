@@ -1,0 +1,16 @@
+#####################################################  
+# azure generic String (template)  
+# github.com/sapiderman/pipelines  
+#####################################################  
+parameters:
+  - name: scriptString
+    type: string
+    default: ''
+
+  - name: displayName
+    type: string
+    default: 'build'
+    
+steps:
+  - script: ${{ parameters.scriptString }}
+    displayName: ${{ displayName}}

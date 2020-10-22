@@ -1,0 +1,22 @@
+#####################################################
+# azure build step
+# github.com/sapiderman/pipelines
+#####################################################
+parameters:
+  - name: displayName
+    type: string
+    default: 'Build image'
+  - name: imgName
+    type: string
+    default: 'image-img'
+  - name: buildPath
+    type: string
+    default: './...'      
+
+steps:    
+  - task: Go@0
+    displayName: ${{ parameters.displayName }}
+    inputs:
+      command: 'build'
+      arguments: '-v -o ${{ parameters.imgName }} ${{ parameters.buildPath }}'
+      workingDirectory: '$(System.DefaultWorkingDirectory)'

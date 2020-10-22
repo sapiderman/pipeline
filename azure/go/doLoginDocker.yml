@@ -1,0 +1,22 @@
+#####################################################  
+# azure build Docker steps  
+# github.com/sapiderman/pipelines  
+#####################################################  
+parameters:
+  - name: displayName
+    type: string
+    default: 'Build Docker Image'
+  - name: containerRegistry
+    type: string
+    default: 'dockerHub'
+  - name: dockerCommand
+    type: string
+    default: 'login'
+
+steps:
+  - task: Docker@2
+    displayName: ${{ parameters.displayName }}
+    inputs:
+      containerRegistry: ${{ parameters.containerRegistry }}
+      command: ${{ parameters.dockerCommand }}
+

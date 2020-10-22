@@ -1,0 +1,56 @@
+################################################################################
+# azure-pipelines.yml
+# github.com/sapiderman/pipelines
+# https://docs.microsoft.com/azure/devops/pipelines/languages/go
+################################################################################
+name: $(Build.DefinitionName) - $(Date:yyyMMdd) Build $(BuildID)
+
+trigger:
+  branches:
+    include:
+      - '*'
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+resources:
+  repositories:
+    - repository: templates
+      name: sapiderman/pipeline
+      type: github
+      endpoint: sapiderman
+
+stages:
+  - stage: Test_and_Build
+
+    jobs:
+      - job: pull_request
+        displayName: 'Build and Test for Pull Request'
+        condition: always() #and(succeeded(), in(variables['Build.Reason'], 'Manual', 'PullRequest'))
+        timeoutInMinutes: 30
+        steps:
+        - task: GoTool@0
+          inputs:
+            version: $(goVersion)
+
+        - task: Go@0
+          inputs:
+            command: 'get'
+            arguments: '-d ./...'
+            workingDirectory: '$(System.DefaultWorkingDirectory)'
+
+        - template: build/azure/getDependencies.yml@templates
+        - template: build/azure/doTests.yml@templates
+          parameters:
+            testPath: $(testPath)
+
+        - template: build/azure/doBuild.yml@templates
+          parameters:
+            imgName: $(imageName)
+            buildPath: $(buildPath)
+
+        - template: build/azure/doBuildDocker.yml@templates
+          parameters:
+            dockerCommand: 'build'
+            dockerFile: $(dockerFile)
+            tag: $(Date:yyyMMdd)-$(BuildID)
