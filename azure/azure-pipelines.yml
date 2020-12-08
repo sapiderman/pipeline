@@ -1,8 +1,10 @@
-################################################################################
+##########################################################################
 # azure-pipelines.yml
+# sample azure pileine
+#
 # github.com/sapiderman/pipelines
 # https://docs.microsoft.com/azure/devops/pipelines/languages/go
-################################################################################
+##########################################################################
 name: $(Build.DefinitionName) - $(Date:yyyMMdd) Build $(BuildID)
 
 trigger:
@@ -39,18 +41,21 @@ stages:
             arguments: '-d ./...'
             workingDirectory: '$(System.DefaultWorkingDirectory)'
 
-        - template: build/azure/getDependencies.yml@templates
-        - template: build/azure/doTests.yml@templates
+        - template: azure/go/getDependencies.yml@templates
+        - template: azure/go/doTests.yml@templates
           parameters:
             testPath: $(testPath)
 
-        - template: build/azure/doBuild.yml@templates
+        - template: azure/go/doBuild.yml@templates
           parameters:
             imgName: $(imageName)
-            buildPath: $(buildPath)
+            buildPath: $(buildPath)       
 
-        - template: build/azure/doBuildDocker.yml@templates
+        - template: azure/docker/doBuildDocker.yml@templates
           parameters:
-            dockerCommand: 'build'
+            containerRegistry: $(containerRegistry)
+            dockerRepository: $(dockerRepository)            
+            dockerCommand: 'buildAndPush'
             dockerFile: $(dockerFile)
-            tag: $(Date:yyyMMdd)-$(BuildID)
+            tag: $(Build.BuildID)
+            displayName: 'Build Docker and Push to DockerRegistry'
