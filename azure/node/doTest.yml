@@ -1,0 +1,27 @@
+#####################################################################  
+# Azure pipeline : test and publish results
+# github.com/sapiderman/pipelines  
+####################################################################  
+parameters:
+  - name: testPath
+    type: string
+    default: './...'
+
+steps:
+  - script: |
+          set -ex
+          npm test
+    workingDirectory: '$(System.DefaultWorkingDirectory)'
+    displayName: 'Run unit test'
+
+  - task: PublishTestResults@2
+    displayName: 'Publish unit test results'
+    inputs:
+      testRunner: JUnit
+      testResultsFiles: $(System.DefaultWorkingDirectory)/**/report.xml
+
+  - task: PublishCodeCoverageResults@1
+    displayName: 'Publish coverage'
+    inputs:
+      codeCoverageTool: 'Cobertura' #or JaCoco
+      summaryFileLocation: 'coverage.xml'

@@ -1,0 +1,41 @@
+##########################################################################
+# azure-pipelines.yml
+# sample azure pileine
+#
+# github.com/sapiderman/pipelines
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+##########################################################################
+name: $(Build.DefinitionName) - $(Date:yyyMMdd) Build $(BuildID)
+
+trigger:
+  branches:
+    include:
+      - '*'
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+resources:
+  repositories:
+    - repository: templates
+      name: sapiderman/pipeline
+      type: github
+      endpoint: sapiderman
+
+stages:
+  - stage: Test_and_Build
+
+    jobs:
+      - job: pull_request
+        displayName: 'Build and Test for Pull Request'
+        condition: always() #and(succeeded(), in(variables['Build.Reason'], 'Manual', 'PullRequest'))
+        timeoutInMinutes: 30
+
+        steps:
+        - task: NodeTool@0
+          inputs:
+            versionSpec: $(NodeVersion)
+          displayName: 'Install Node.js'
+
+        - template: build/doBuild.yml
+        - template: build/doTest.yml

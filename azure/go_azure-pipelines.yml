@@ -29,7 +29,7 @@ stages:
       - job: pull_request
         displayName: 'Build and Test for Pull Request'
         condition: always() #and(succeeded(), in(variables['Build.Reason'], 'Manual', 'PullRequest'))
-        timeoutInMinutes: 30
+        timeoutInMinutes: '30'
         steps:
         - task: GoTool@0
           inputs:
