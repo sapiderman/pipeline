@@ -10,6 +10,7 @@ parameters:
 steps:
   - script: |
           set -ex
+          npm ci
           npm test
     workingDirectory: '$(System.DefaultWorkingDirectory)'
     displayName: 'Run unit test'
