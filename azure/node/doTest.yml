@@ -8,9 +8,11 @@ parameters:
     default: './...'
 
 steps:
+  - task: NodeTool@0
+    displayName: 'Install dependencies'    
+
   - script: |
-          set -ex
-          npm ci
+          set -ex          
           npm test
     workingDirectory: '$(System.DefaultWorkingDirectory)'
     displayName: 'Run unit test'
