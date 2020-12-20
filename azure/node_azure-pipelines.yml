@@ -34,8 +34,8 @@ stages:
         steps:
         - task: NodeTool@0
           inputs:
-            versionSpec: $(NodeVersion)
+            versionSpec: '14.x'
           displayName: 'Install Node.js'
 
-        - template: build/doBuild.yml
-        - template: build/doTest.yml
+        - template: azure/node/doBuild.yml@templates
+        - template: azure/node/doTest.yml@templates

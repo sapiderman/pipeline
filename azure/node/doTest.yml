@@ -11,6 +11,12 @@ steps:
   - task: NodeTool@0
     displayName: 'Install dependencies'    
 
+  - task: Npm@1
+    inputs:
+      command: 'install' # Options: install, publish, custom
+      workingDir: $(System.DefaultWorkingDirectory)'
+      verbose: true # Optional
+
   - script: |
           set -ex          
           npm test
