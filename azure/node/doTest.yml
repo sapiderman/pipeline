@@ -3,9 +3,9 @@
 # github.com/sapiderman/pipelines  
 ####################################################################  
 parameters:
-  - name: testPath
+  - name: testCmd
     type: string
-    default: './...'
+    default: 'mocha test --reporter mocha-junit-reporter' #npm run test
 
 steps:
   - task: Npm@1
@@ -13,21 +13,25 @@ steps:
       command: 'install' # Options: install, publish, custom
       workingDir: '$(System.DefaultWorkingDirectory)'
       verbose: true # Optional
+    displayName: 'npm install'
 
+  # ensure npm run uses --reporter mocha-junit-reporter for coverage
   - script: |
           set -ex          
-          npm test
+          npm run test 
     workingDirectory: '$(System.DefaultWorkingDirectory)'
     displayName: 'Run unit test'
 
   - task: PublishTestResults@2
     displayName: 'Publish unit test results'
+    condition: succeededOrFailed()
     inputs:
       testRunner: JUnit
-      testResultsFiles: $(System.DefaultWorkingDirectory)/**/report.xml
+      testResultsFiles: '$(System.DefaultWorkingDirectory)/**/test-results.xml'
 
   - task: PublishCodeCoverageResults@1
     displayName: 'Publish coverage'
-    inputs:
-      codeCoverageTool: 'Cobertura' #or JaCoco
-      summaryFileLocation: 'coverage.xml'
+    inputs: 
+      codeCoverageTool: Cobertura # or JaCoCo
+      summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/*coverage.xml'
+      reportDirectory: '$(System.DefaultWorkingDirectory)/**/coverage'

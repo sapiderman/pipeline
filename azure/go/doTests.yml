@@ -21,7 +21,7 @@ steps:
     displayName: 'Publish unit test results'
     inputs:
       testRunner: JUnit
-      testResultsFiles: $(System.DefaultWorkingDirectory)/**/report.xml
+      testResultsFiles: '$(System.DefaultWorkingDirectory)/**/report.xml'
 
   - task: PublishCodeCoverageResults@1
     displayName: 'Publish coverage'
