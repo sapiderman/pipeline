@@ -5,21 +5,12 @@
 parameters:
   - name: displayName
     type: string
-    default: 'Build image'
-  - name: imgName
-    type: string
-    default: 'image-img'
-  - name: buildPath
-    type: string
-    default: './...'
-  - name: VersionSpec
-    type: string
-    default: '14.x'
+    default: "Build image"
 
-steps:    
-  - task: NodeTool@0
-    displayName: ${{ parameters.displayName }}
+steps:
+  - task: Npm@1
     inputs:
-      command: 'build'
-      arguments: '-v -o ${{ parameters.imgName }} ${{ parameters.buildPath }}'
-      workingDirectory: '$(System.DefaultWorkingDirectory)'
+      command: "install" # Options: install, publish, custom
+      workingDir: "$(System.DefaultWorkingDirectory)"
+      verbose: true # Optional
+    displayName: "${{ parameters.displayName }}"

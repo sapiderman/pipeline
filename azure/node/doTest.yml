@@ -13,14 +13,14 @@ steps:
       command: 'install' # Options: install, publish, custom
       workingDir: '$(System.DefaultWorkingDirectory)'
       verbose: true # Optional
-    displayName: 'npm install'
+    displayName: 'Npm Install'
 
   # ensure npm run uses --reporter mocha-junit-reporter for coverage
   - script: |
           set -ex          
-          npm run test 
+          npm run coverage 
     workingDirectory: '$(System.DefaultWorkingDirectory)'
-    displayName: 'Run unit test'
+    displayName: 'Run unit and coverage test'
 
   - task: PublishTestResults@2
     displayName: 'Publish unit test results'
